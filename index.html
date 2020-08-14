@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+
+    <main class="step-container">
+
+        <div class="graph-wrapper" id="essential-industries">
+            <h3>Share of Residents Working Jobs in …</h3>
+            <div>
+                <h3>Essential Industries</h3>
+                <h3>Face-to-Face Industries</h3>
+            </div>
+            <svg></svg>
+        </div>
+
+        <div class="graph-wrapper">
+            <h3>New York State Initial Unemployment Claims: Industries Reporting Highest Increase from 2019-2020</h3>
+            <div class="data-table">
+                <div class="data-table-container">
+                    <p>Industry</p>
+                    <p>Number of new unemployment claims</p>
+                    <p>Percent change</p>
+                </div>
+                <div class="data-table-container">
+                    <p>Other Services</p>
+                    <p>+142,811</p>
+                    <p>+2543%</p>
+                </div>
+                <div class="data-table-container">
+                    <p>Retail Trade</p>
+                    <p>+339,068</p>
+                    <p>+1707%</p>
+                </div>
+                <div class="data-table-container">
+                    <p>Accommodation and Food Services</p>
+                    <p>+344,554</p>
+                    <p>+1315%</p>
+                </div>
+                <div class="data-table-container">
+                    <p>Health Care and Social Assistance</p>
+                    <p>+344,554</p>
+                    <p>+1315%</p>
+                </div>
+                <div class="data-table-container">
+                    <p>Wholesale Trade</p>
+                    <p>+89,586</p>
+                    <p>+1190%</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="graph-wrapper stacked-bar-chart-wrapper" id="industry-immigration-status">
+            <h3>Share of workers in each industry by citizenship status</h3>
+            <div class="legend-wrapper">
+                <i></i><span>US-born</span><i></i><span>Naturalized citizen</span><i></i><span>Non-citizen</span>
+            </div>
+            <div class="container" id="construction">
+                <span>Construction</span>
+                <svg></svg>
+            </div>
+            <div class="container" id="restaurant">
+                <span>Restaurant</span>
+                <svg></svg>
+            </div>
+            <div class="container" id="food">
+                <span>Restaurant</span>
+                <svg></svg>
+            </div>
+            <div class="container" id="personal">
+                <span>Personal</span>
+                <svg></svg>
+            </div>
+            <div class="container" id="food-retail">
+                <span>Food Retail</span>
+                <svg></svg>
+            </div>
+            <div class="container" id="all">
+                <span>All</span>
+                <svg></svg>
+            </div>
+        </div>
+
+        <div class="graph-wrapper grouped-charts" id="share-of-workers">
+            <h3>Share of workers in each industry by race/ethnicity</h3>
+            <div class="legend-wrapper">
+                <i></i><span>Asian</span><i></i><span>Black</span><i></i><span>Latino</span><i></i><span>White</span>
+            </div>
+            <svg></svg>
+        </div>
+
+        <div class="graph-wrapper grouped-charts" id="share-of-age">
+            <h3>Share of age group employed in…</h3>
+            <div class="legend-wrapper">
+                <i></i><span>Teens (16-19 years)</span><i></i><span>Young Adults (20-24 years)</span><i></i><span>Adults
+                    (25+ years)</span>
+            </div>
+            <svg></svg>
+        </div>
+
+        <div class="graph-wrapper stacked-bar-chart-wrapper working-parents">
+            <h3>Nearly 250,000 essential workers live with at least one child under 18 at home</h3>
+            <div class="legend-wrapper">
+                <i></i><span>w/ young children(<5 yrs)</span><i></i><span>w/ school aged children
+                            (5-17)</span></div>
+            <div class="legend-wrapper">
+                <i></i><span>w/ young + school children (<5 & 5-17)</span>
+                                    
+            </div>
+            <div class="industry-container">
+                <p>Essential</p>
+                <div>
+                    <div class="container">
+                        <span></span>
+                        <svg id="healthcare"></svg>
+                    </div>
+                    <div class="container">
+                        <span></span>
+                        <svg id="food-retail"></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="industry-container">
+                <p>Face-to-Face</p>
+                <div>
+                    <div class="container">
+                        <span></span>
+                        <svg id="restaurants"></svg>
+                    </div>
+                    <div class="container">
+                        <span></span>
+                        <svg id="transportation"></svg>
+                    </div>
+                    <div class="container">
+                        <span></span>
+                        <svg id="personal"></svg>
+                    </div>
+                    <div class="container">
+                        <span></span>
+                        <svg id="nonessential"></svg>
+                    </div>
+                    <div class="container">
+                        <span></span>
+                        <svg id="construction"></svg>
+                    </div>
+                    <div class="container">
+                        <span></span>
+                        <svg id="admin"></svg>
+                    </div>
+                </div>
+            </div>
+            <div class="industry-container">
+                <p>Remote Industries</p>
+                <div>
+                    <div class="container">
+                        <span></span>
+                        <svg id="education"></svg>
+                    </div>
+                    <div class="container">
+                        <span></span>
+                        <svg id="finance"></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <script src="index.js" async defer></script>
+</body>
+
+</html>
