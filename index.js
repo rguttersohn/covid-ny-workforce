@@ -136,7 +136,7 @@ const createHorizontalBarChart = () => {
 
   // bar chart settings
   const width = 400;
-  const height = 190;
+  const height = 200;
   const margin = { left: 150, right: 50, top: 10, bottom: 10 };
 
   const svg = d3
@@ -151,12 +151,7 @@ const createHorizontalBarChart = () => {
     xScale = d3
       .scaleLinear()
       .range([0, width / 2])
-      .domain([
-        0,
-        d3.max(trimmedData, (d) => {
-          return d.value;
-        }),
-      ]);
+      .domain([0,67]);
 
     //yscale
     yScale = d3
@@ -167,7 +162,7 @@ const createHorizontalBarChart = () => {
           return d.key;
         })
       )
-      .padding(0.4);
+      .padding(0.1);
 
     const bars = svg
       .append("g")
@@ -207,12 +202,11 @@ const createHorizontalBarChart = () => {
         return d.value + "%";
       })
       .attr("x", (d) => xScale(d.value) + transX)
-      .attr("dx", "1.5em")
+      .attr("dx", "2em")
       .attr("y", (d) => {
-        return yScale(d.key) + yScale.bandwidth() + margin.top;
+        return yScale(d.key) + yScale.bandwidth() + margin.top-5;
       })
-      .attr("dy", ".3em")
-      .attr("text-anchor", "middle");
+      .attr("text-anchor", "center");
 
     const neighborhoodLabels = svg
       .append("g")
@@ -226,9 +220,9 @@ const createHorizontalBarChart = () => {
       .attr("x", transX -20)
       .attr("dx", "1.5em")
       .attr("y", (d) => {
-        return yScale(d.key) + yScale.bandwidth();
+        return yScale(d.key) + yScale.bandwidth()/2 +2;
       })
-      .attr("text-anchor", "center");
+      .attr("text-anchor", "start");
   };
 
   createChart(essentialIndustries, 0);
@@ -477,7 +471,7 @@ const createGroupedChart_race = (id) => {
       .attr("width", width / 8)
       .attr(
         "transform",
-        `translate(${transX + 20},${height + margin.top + 20})`
+        `translate(${transX + 60},${height + margin.top + 20})`
       )
       .selectAll("text")
       .data(data)
@@ -493,6 +487,7 @@ const createGroupedChart_race = (id) => {
         return yScale(d.value);
       })
       .attr("dy", "-.5em")
+      .attr('text-anchor','middle')
       .style("font-size", "12px")
       .call(wrapXAxis, xScale.bandwidth() + 100);
   };
@@ -620,7 +615,7 @@ const createGroupedChart_age = (id) => {
 
   const xScale = d3
     .scaleBand()
-    .range([0, width / 6])
+    .range([0, width / 4])
     .domain(ageWorkers_arts.map((d) => d.key))
     .padding(0.1);
 
@@ -637,7 +632,7 @@ const createGroupedChart_age = (id) => {
     svg
       .append("g")
       .attr("class", "group")
-      .attr("width", width / 8)
+      .attr("width", width / 4)
       .attr("transform", `translate(${transX},${margin.top})`)
       .selectAll("rect")
       .data(trimmedData)
@@ -660,8 +655,8 @@ const createGroupedChart_age = (id) => {
     svg
       .append("g")
       .attr("class", "label-group")
-      .attr("width", width / 8)
-      .attr("transform", `translate(${transX},${margin.top})`)
+      .attr("width", width / 4)
+      .attr("transform", `translate(${transX + xScale.bandwidth()-20},${margin.top})`)
       .selectAll("text")
       .data(trimmedData)
       .enter()
@@ -676,16 +671,17 @@ const createGroupedChart_age = (id) => {
         return yScale(d.value);
       })
       .attr("dy", "-.5em")
-      .style("font-size", "10px");
+      .style("font-size", "14px")
+      .attr('text-anchor','middle');
 
     //overall group labels
     svg
       .append("g")
       .attr("class", "overall-label-group")
-      .attr("width", width / 8)
+      .attr("width", width / 4)
       .attr(
         "transform",
-        `translate(${transX + 20},${height + margin.bottom + 20})`
+        `translate(${transX + 100},${height + margin.bottom + 20})`
       )
       .selectAll("text")
       .data(data)
@@ -702,13 +698,14 @@ const createGroupedChart_age = (id) => {
       })
       .attr("dy", "-.5em")
       .style("font-size", "12px")
-      .call(wrapXAxis, xScale.bandwidth() + 100);
+      .attr('text-anchor','middle')
+      .call(wrapXAxis, xScale.bandwidth() + 120);
   };
   //run the functions for the graphs for race of workers by industry
-  createCharts(ageWorkers_restaurant, 0, "share-of-age");
-  createCharts(ageWorkers_nonessential, 175, "share-of-age");
-  createCharts(ageWorkers_arts, 175 * 2, "share-of-age");
-  createCharts(ageWorkers_foodRetail, 175 * 3, "share-of-age");
+  createCharts(ageWorkers_restaurant, -20, "share-of-age");
+  createCharts(ageWorkers_nonessential, 155, "share-of-age");
+  createCharts(ageWorkers_arts, 155 * 2, "share-of-age");
+  createCharts(ageWorkers_foodRetail, 155 * 3, "share-of-age");
 
   let legendIcon = document.querySelectorAll('#share-of-age .legend-wrapper i')
   for (let i =0;i<legendIcon.length;i++){
@@ -792,7 +789,7 @@ const workingParents_finance = [
 ];
 
 const createWorkingParentsChart = () => {
-  const colors = ["#ff6633", "#cc99cc", "#0099cd"];
+  const colors = ["#ff6633", "#ffcccc", "#0099cd"];
 
   const createStackedChart = (data, id) => {
     const trimmedData = data.filter((el) => el.key !== "Total");
@@ -855,7 +852,7 @@ const createWorkingParentsChart = () => {
       .enter()
       .append("text")
       .text((d) => {
-        return d.value;
+        return commaFormatter(d.value);
       })
       .attr("x", (d) => {
         return xScale(d.offset) + xBand.bandwidth();
