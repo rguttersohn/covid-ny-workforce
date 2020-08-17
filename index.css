@@ -260,6 +260,10 @@ h3 {
   width: 250px;
 }
 
+.graph-wrapper * {
+  transition: opacity 0.3s ease-in-out
+}
+
 .graph-wrapper#essential-industries div {
   display: flex;
   justify-content: space-evenly;

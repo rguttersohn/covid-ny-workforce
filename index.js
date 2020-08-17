@@ -464,7 +464,8 @@ const createGroupedChart_race = (id) => {
         return yScale(d.value);
       })
       .attr("dy", "-.5em")
-      .style("font-size", "10px");
+      .style("font-size", "10px")
+      .attr("data-race",d=>d.key);
 
     //overall group labels
     svg
@@ -537,7 +538,8 @@ const createGroupedChart_race = (id) => {
       .attr("dy", 5)
       .attr("transform", `translate(0,${margin.top})`)
       .style("font-size", "10px")
-      .attr("text-anchor", "top");
+      .attr("text-anchor", "top")
+      .attr('data-race', d=>d.key);
 
     //overall group labels
     svg
@@ -570,10 +572,12 @@ const createGroupedChart_race = (id) => {
   createStackedDotChart(shareWorkers_population);
 
   let legendIcon = document.querySelectorAll('#share-of-workers .legend-wrapper i')
+  let legendText = document.querySelectorAll('#share-of-workers .legend-wrapper span')
   let trimmedData = shareWorkers_population.filter((el) => el.key !== undefined);
   for (let i =0;i<legendIcon.length;i++){
     legendIcon[i].style.backgroundColor = colors[i]
     legendIcon[i].dataset.race = trimmedData[i].key
+    legendText[i].dataset.race = trimmedData[i].key
   }
 //add interactivity
 
@@ -582,30 +586,37 @@ let tooltip = document.querySelector(
 );
 let elements = document.querySelectorAll('#share-of-workers [data-race]')
 for (let i =0;i<elements.length;i++){
+  let unmatchedElements;
   elements[i].addEventListener('mouseenter', event=>{
-    let matchingElements = document.querySelectorAll(`#share-of-workers [data-race='${event.target.dataset.race}']`)
+    let matchingElements = document.querySelectorAll(`#share-of-workers rect[data-race='${event.target.dataset.race}'],#share-of-workers circle[data-race='${event.target.dataset.race}']`)
+    unmatchedElements = document.querySelectorAll(
+      `#share-of-workers .legend-wrapper :not([data-race='${event.target.dataset.race}']),#share-of-workers .group rect:not([data-race='${event.target.dataset.race}']),#share-of-workers .dots circle:not([data-race='${event.target.dataset.race}']),#share-of-workers svg .label-group text:not([data-race='${event.target.dataset.race}'])`);
+   for (els of unmatchedElements){
+     els.style.opacity = 0.1
+   }
     tooltip.style.display = "block";
       tooltip.style.opacity = 1;
-      tooltip.style.borderColor = event.target.getAttribute('fill')
+      event.target.getAttribute('fill') ? tooltip.style.borderColor = event.target.getAttribute('fill') : tooltip.style.borderColor = event.target.style.backgroundColor
       tooltip.style.left = `${event.clientX}px`;
       tooltip.style.top = `${event.clientY * 1.1}px`;
       tooltip.innerHTML = `<div>
+      
       ${event.target.dataset.race} residents make up:
       <ul>
         <li>
-          ${matchingElements[1].dataset.rate} of the arts and entertainment workforce<br> 
+          ${matchingElements[0].dataset.rate} of the arts and entertainment workforce<br> 
         </li>
         <li>
-          ${matchingElements[2].dataset.rate} of the childcare workforce<br>
+          ${matchingElements[1].dataset.rate} of the childcare workforce<br>
         </li>
         <li>
-          ${matchingElements[3].dataset.rate} of the transportation/warehouse workforce<br>
+          ${matchingElements[2].dataset.rate} of the transportation/warehouse workforce<br>
         </li>
         <li>
-          ${matchingElements[4].dataset.rate} of the restaurant/hospitality workforce<br>
+          ${matchingElements[3].dataset.rate} of the restaurant/hospitality workforce<br>
         </li>
         <li>
-          and are ${matchingElements[5].dataset.rate} of the overall working-age population.
+          and are ${matchingElements[4].dataset.rate} of the overall working-age population.
         </li>
       </ul>
       </div>`
@@ -614,7 +625,11 @@ for (let i =0;i<elements.length;i++){
   elements[i].addEventListener('mouseleave',event=>{
     tooltip.style.display = "none";
     tooltip.style.opacity = 0;
-    tooltip.textContent = ""
+    for(els of unmatchedElements){
+      els.style.opacity =1;
+    }
+    
+  
   })
 }
 
@@ -696,7 +711,9 @@ const createGroupedChart_age = (id) => {
         return yScale(d.value);
       })
       .attr("height", (d) => height - yScale(d.value) + "px")
-      .attr("fill", (d, i) => colors[i]);
+      .attr("fill", (d, i) => colors[i])
+      .attr('data-age',d=>d.key)
+      .attr('data-rate', d=>d.value + '%');
 
     //data labels
 
@@ -720,7 +737,8 @@ const createGroupedChart_age = (id) => {
       })
       .attr("dy", "-.5em")
       .style("font-size", "14px")
-      .attr('text-anchor','middle');
+      .attr('text-anchor','middle')
+      .attr('data-age',d=>d.key);
 
     //overall group labels
     svg
@@ -756,9 +774,66 @@ const createGroupedChart_age = (id) => {
   createCharts(ageWorkers_foodRetail, 155 * 3, "share-of-age");
 
   let legendIcon = document.querySelectorAll('#share-of-age .legend-wrapper i')
+  let legendText = document.querySelectorAll('#share-of-age .legend-wrapper span')
+  let trimmedData = ageWorkers_arts.filter((el) => el.key !== undefined);
   for (let i =0;i<legendIcon.length;i++){
     legendIcon[i].style.backgroundColor = colors[i]
+    legendIcon[i].dataset.age = trimmedData[i].key
+    legendText[i].dataset.age = trimmedData[i].key
+    
   }
+
+
+  //add interactivity
+
+let tooltip = document.querySelector(
+  "#share-of-age .tooltip"
+);
+let elements = document.querySelectorAll('#share-of-age [data-age]')
+for (let i =0;i<elements.length;i++){
+  let unmatchedElements;
+  elements[i].addEventListener('mouseenter', event=>{
+    let matchingElements = document.querySelectorAll(`#share-of-age rect[data-age='${event.target.dataset.age}']`)
+    unmatchedElements = document.querySelectorAll(
+      `#share-of-age .legend-wrapper :not([data-age='${event.target.dataset.age}']),#share-of-age .group rect:not([data-age='${event.target.dataset.age}']),#share-of-age svg .label-group text:not([data-age='${event.target.dataset.age}'])`);
+   for (els of unmatchedElements){
+     els.style.opacity = 0.1
+   }
+    tooltip.style.display = "block";
+      tooltip.style.opacity = 1;
+      event.target.getAttribute('fill') ? tooltip.style.borderColor = event.target.getAttribute('fill') : tooltip.style.borderColor = event.target.style.backgroundColor
+      tooltip.style.left = `${event.clientX}px`;
+      tooltip.style.top = `${event.clientY * 1.1}px`;
+      tooltip.innerHTML = `<div>
+      
+      ${event.target.dataset.age} make up:
+      <ul>
+        <li>
+          ${matchingElements[0].dataset.rate} of the restaurants & hospitality workforce<br> 
+        </li>
+        <li>
+          ${matchingElements[1].dataset.rate} of the nonessential workforce<br>
+        </li>
+        <li>
+          ${matchingElements[2].dataset.rate} of the arts, entertainment, & recreation workforce<br>
+        </li>
+        <li>
+          ${matchingElements[3].dataset.rate} of the food, drug, & beverage retails workforce workforce<br>
+        </li>
+      </ul>
+      </div>`
+  })
+
+  elements[i].addEventListener('mouseleave',event=>{
+    tooltip.style.display = "none";
+    tooltip.style.opacity = 0;
+    for(els of unmatchedElements){
+      els.style.opacity =1;
+    }
+    
+  
+  })
+}
   // end of function
 };
 
@@ -871,6 +946,7 @@ const createWorkingParentsChart = () => {
     svg
       .append("g")
       .attr("class", `${id}-bars`)
+      .attr('class','group')
       .selectAll("rect")
       .data(trimmedData)
       .enter()
@@ -888,13 +964,16 @@ const createWorkingParentsChart = () => {
         return xScale(d.offset);
       })
       .attr("fill", (d, i) => colors[i])
-      .attr("transform", `translate(${margin.left},0)`);
+      .attr("transform", `translate(${margin.left},0)`)
+      .attr('data-child-age',d=>d.key)
+      .attr('data-stat',d=>commaFormatter(d.value));
 
     //labels
     let total = data.filter((el) => el.key === "Total");
     svg
       .append("g")
       .attr("class", `${id}-labels`)
+      .attr('class', 'label-group')
       .selectAll("text")
       .data(total)
       .enter()
@@ -936,16 +1015,69 @@ const createWorkingParentsChart = () => {
     "Education",
     "Finance, Insurance, Real Estate",
   ];
+
+  let graphGroups = document.querySelectorAll('.working-parents svg .group')
+  
   let industryLabelSpan = document.querySelectorAll(
     ".industry-container .container span"
   );
   for (let i = 0; i < industryLabelSpan.length; i++) {
     industryLabelSpan[i].textContent = industryLabels[i];
+    graphGroups[i].dataset.industry= industryLabels[i]
   }
 
   let legendIcons = document.querySelectorAll('.working-parents .legend-wrapper i')
   for (let i = 0;i<legendIcons.length;i++){
     legendIcons[i].style.backgroundColor = colors[i]
   }
+
+
+   //add interactivity
+
+let tooltip = document.querySelector(
+  ".working-parents .tooltip"
+);
+
+let elements = document.querySelectorAll('.working-parents [data-child-age]')
+for (let i =0;i<elements.length;i++){
+  let unmatchedElements;
+  elements[i].addEventListener('mouseenter', event=>{
+    let matchingElements = document.querySelectorAll(`.working-parents svg .group[data-industry='${event.target.parentNode.dataset.industry}'] rect`)
+    unmatchedElements = document.querySelectorAll(`.working-parents svg .group:not([data-industry='${event.target.parentNode.dataset.industry}'])`);
+   for (els of unmatchedElements){
+     els.style.opacity = 0.1
+   }
+    tooltip.style.display = "block";
+      tooltip.style.opacity = 1;
+      tooltip.style.left = `${event.clientX}px`;
+      tooltip.style.top = `${event.clientY * 1.1}px`;
+      tooltip.innerHTML = `<div>
+      Within the ${event.target.parentNode.dataset.industry} industry:
+      <ul>
+        <li>
+          ${matchingElements[0].dataset.stat} have children under 5<br> 
+        </li>
+        <li>
+          ${matchingElements[1].dataset.stat} have children between 5 and 17<br>
+        </li>
+        <li>
+          ${matchingElements[2].dataset.stat} have children younger than 5 and children between 5 and 17<br>
+        </li>
+      </ul>
+      </div>`
+  })
+
+  elements[i].addEventListener('mouseleave',event=>{
+    tooltip.style.display = "none";
+    tooltip.style.opacity = 0;
+    for(els of unmatchedElements){
+      els.style.opacity =1;
+    }
+    
+  
+  })
+}
+
+  //end of function 
 };
 createWorkingParentsChart();
