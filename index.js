@@ -441,7 +441,9 @@ const createGroupedChart_race = (id) => {
         return yScale(d.value);
       })
       .attr("height", (d) => height - yScale(d.value) + "px")
-      .attr("fill", (d, i) => colors[i]);
+      .attr("fill", (d, i) => colors[i])
+      .attr('data-race',d=> d.key)
+      .attr('data-rate',d=>d.value + '%');
 
     svg
       .append("g")
@@ -516,7 +518,9 @@ const createGroupedChart_race = (id) => {
         return yScale(d.value);
       })
       .attr("transform", `translate(0,${margin.top})`)
-      .attr("fill", (d, i) => colors[i]);
+      .attr("fill", (d, i) => colors[i])
+      .attr('data-race',d=>d.key)
+      .attr('data-rate',d=>d.value + "%");
     svg
       .append("g")
       .attr("class", "dot-labels")
@@ -566,9 +570,53 @@ const createGroupedChart_race = (id) => {
   createStackedDotChart(shareWorkers_population);
 
   let legendIcon = document.querySelectorAll('#share-of-workers .legend-wrapper i')
+  let trimmedData = shareWorkers_population.filter((el) => el.key !== undefined);
   for (let i =0;i<legendIcon.length;i++){
     legendIcon[i].style.backgroundColor = colors[i]
+    legendIcon[i].dataset.race = trimmedData[i].key
   }
+//add interactivity
+
+let tooltip = document.querySelector(
+  "#share-of-workers .tooltip"
+);
+let elements = document.querySelectorAll('#share-of-workers [data-race]')
+for (let i =0;i<elements.length;i++){
+  elements[i].addEventListener('mouseenter', event=>{
+    let matchingElements = document.querySelectorAll(`#share-of-workers [data-race='${event.target.dataset.race}']`)
+    tooltip.style.display = "block";
+      tooltip.style.opacity = 1;
+      tooltip.style.borderColor = event.target.getAttribute('fill')
+      tooltip.style.left = `${event.clientX}px`;
+      tooltip.style.top = `${event.clientY * 1.1}px`;
+      tooltip.innerHTML = `<div>
+      ${event.target.dataset.race} residents make up:
+      <ul>
+        <li>
+          ${matchingElements[1].dataset.rate} of the arts and entertainment workforce<br> 
+        </li>
+        <li>
+          ${matchingElements[2].dataset.rate} of the childcare workforce<br>
+        </li>
+        <li>
+          ${matchingElements[3].dataset.rate} of the transportation/warehouse workforce<br>
+        </li>
+        <li>
+          ${matchingElements[4].dataset.rate} of the restaurant/hospitality workforce<br>
+        </li>
+        <li>
+          and are ${matchingElements[5].dataset.rate} of the overall working-age population.
+        </li>
+      </ul>
+      </div>`
+  })
+
+  elements[i].addEventListener('mouseleave',event=>{
+    tooltip.style.display = "none";
+    tooltip.style.opacity = 0;
+    tooltip.textContent = ""
+  })
+}
 
   // end of function
 };
