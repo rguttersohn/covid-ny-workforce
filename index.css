@@ -293,6 +293,7 @@ h3 {
 .graph-wrapper .data-table .data-table-container {
   display: flex;
   justify-content: space-between;
+  align-items: flex-end;
 }
 
 .graph-wrapper .data-table .data-table-container p {
